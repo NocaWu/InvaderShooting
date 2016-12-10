@@ -1,6 +1,6 @@
 import pygame
 from Colors import *
-
+#the same message
 # ==================================== Player Class ======================================= 
 class Shooter(pygame.sprite.Sprite):
     
