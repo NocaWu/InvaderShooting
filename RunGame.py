@@ -148,6 +148,7 @@ def main():
     playing = True
     x = 0
     hit_ground = 0
+    score = 0
 
     font = pygame.font.SysFont("Arial",16)
     text = font.render("SHOOT TO KEEP THEM AWAY",True,white)
@@ -193,12 +194,20 @@ def main():
         if (hit_ground >8):
             text = font.render("GAME OVER, PRESS R TO REPLAY",True,white)
             playing = False
-            player.set_playing(playing) 
+            player.set_playing(playing) # make as least of bool, var, etc as possible
             
+        if playing:
+            score += 11 - hit_ground
+        
+        # score_text = font.render(str(score), True,white)
+        score_line = font.render("your score is: "+str(score) ,True,white)
+        
         window.fill(black)
         all_group.draw(window)
 
         window.blit(text,(window_width/2 - text.get_rect().width/2,4))
+        window.blit(score_line,(window_width/2 - score_line.get_rect().width/2,20))
+        # window.blit(score_text,(window_width/2,20))
 
         pygame.display.flip()
 
