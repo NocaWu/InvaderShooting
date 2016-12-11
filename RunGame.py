@@ -1,6 +1,5 @@
 import pygame
 from Colors import *
-#the same message
 
 # ==================================== Player Class ======================================= 
 class Shooter(pygame.sprite.Sprite):
@@ -34,10 +33,6 @@ class Shooter(pygame.sprite.Sprite):
             self.rect.left = 2
         if self.rect.right > 218:
             self.rect.right = 218
-
-    def clear(self):
-        self.kill()
-        
             
 # ==================================== Bullet Class ======================================= 
 class Bullet(pygame.sprite.Sprite):
@@ -57,10 +52,6 @@ class Bullet(pygame.sprite.Sprite):
         # kill if off screen:
         if self.rect.bottom < 0:
             self.kill()
-
-    def clear(self):
-        self.kill()
-        
         
 # ==================================== Invader Class ======================================= 
 class Invader(pygame.sprite.Sprite):
@@ -80,12 +71,6 @@ class Invader(pygame.sprite.Sprite):
     def update(self):
         if (self.rect.y < 400):
             self.rect.y += 4
-                       
-        # if (self.rect.y > 400):
-        #     self.kill()
-
-    def clear(self):
-        self.kill()
 
 class Ground(pygame.sprite.Sprite):
     
@@ -99,25 +84,17 @@ class Ground(pygame.sprite.Sprite):
         self.rect.centerx = 110
         self.rect.centery = 400
 
-    def clear(self):
-        self.kill()
-
-
-#def playAgain():
-    
-
 # ==================================== Main  ======================================= 
 def main():
-# first side of the board
 
-# we muat initialize at the beginning
+# we must initialize at the beginning
     pygame.init()
 
 # set up basic game, window size, game name, cursor, bg color
     window_size = window_width, window_height = 220,400
     window = pygame.display.set_mode(window_size, pygame.NOFRAME) 
     
-    pygame.display.set_caption('Shooter Invader') 
+    # pygame.display.set_caption('Shooter Invader') 
     pygame.mouse.set_visible(0) 
 
 # setting up the frame rate
@@ -154,7 +131,7 @@ def main():
     text = font.render("SHOOT TO KEEP THEM AWAY",True,white)
     
     while (running):
-        
+          
         # player always move and shoot
         player.update()
         if playing:
@@ -191,23 +168,21 @@ def main():
             for hit in hit_ground_list:
                 hit_ground += 1
             
-        if (hit_ground >7):
+        if (hit_ground >5):
             text = font.render("GAME OVER, PRESS R TO REPLAY",True,white)
             playing = False
-            player.set_playing(playing) # make as least of bool, var, etc as possible
+            player.set_playing(playing) # make as least of bool, var, player etc as possible
             
         if playing:
             score += 11 - hit_ground
         
-        # score_text = font.render(str(score), True,white)
-        score_line = font.render("your score is: "+str(score) ,True,white)
+        score_text = font.render("your score is: " + str(score),True,white)
         
         window.fill(black)
         all_group.draw(window)
 
         window.blit(text,(window_width/2 - text.get_rect().width/2,4))
-        window.blit(score_line,(window_width/2 - score_line.get_rect().width/2,20))
-        # window.blit(score_text,(window_width/2,20))
+        window.blit(score_text,(window_width/2 - score_text.get_rect().width/2,20))
 
         pygame.display.flip()
 
