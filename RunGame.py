@@ -1,6 +1,7 @@
 import pygame
 from Colors import *
 #the same message
+
 # ==================================== Player Class ======================================= 
 class Shooter(pygame.sprite.Sprite):
     
@@ -11,22 +12,32 @@ class Shooter(pygame.sprite.Sprite):
         self.image = pygame.Surface((16,16)) # 'S'urface!
         self.image.fill(white)
         self.rect = self.image.get_rect()
+        self.playing = True
 
+    def set_playing(self, new_state):
+        self.playing = new_state
+    
     def set_position(self,x,y):
         self.rect.x = x
         self.rect.y = y
     
     def update(self):
-        for event in pygame.event.get():
+        for event in pygame.event.get(pygame.KEYDOWN):
             if(event.type == pygame.KEYDOWN):
                 if(event.key == pygame.K_LEFT): 
                     self.rect = self.rect.move((-20,0))
                 if(event.key == pygame.K_RIGHT ): 
-                    self.rect = self.rect.move((20,0))        
+                    self.rect = self.rect.move((20,0)) 
+                if event.key == pygame.K_r and not self.playing: 
+                    main() 
         if self.rect.left < 2:
             self.rect.left = 2
         if self.rect.right > 218:
             self.rect.right = 218
+
+    def clear(self):
+        self.kill()
+        
             
 # ==================================== Bullet Class ======================================= 
 class Bullet(pygame.sprite.Sprite):
@@ -46,6 +57,10 @@ class Bullet(pygame.sprite.Sprite):
         # kill if off screen:
         if self.rect.bottom < 0:
             self.kill()
+
+    def clear(self):
+        self.kill()
+        
         
 # ==================================== Invader Class ======================================= 
 class Invader(pygame.sprite.Sprite):
@@ -69,6 +84,9 @@ class Invader(pygame.sprite.Sprite):
         # if (self.rect.y > 400):
         #     self.kill()
 
+    def clear(self):
+        self.kill()
+
 class Ground(pygame.sprite.Sprite):
     
     def __init__(self):
@@ -80,6 +98,13 @@ class Ground(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = 110
         self.rect.centery = 400
+
+    def clear(self):
+        self.kill()
+
+
+#def playAgain():
+    
 
 # ==================================== Main  ======================================= 
 def main():
@@ -104,7 +129,7 @@ def main():
     ground_group = pygame.sprite.Group()
 
     player = Shooter()
-    player.set_position(102, 350)  
+    player.set_position(102, 374)  
     all_group.add(player) 
 
     ground = Ground()
@@ -120,22 +145,24 @@ def main():
 # ==================================== While Running ======================================= 
 # keep the game running 
     running = True
+    playing = True
     x = 0
     hit_ground = 0
 
     font = pygame.font.SysFont("Arial",16)
     text = font.render("SHOOT TO KEEP THEM AWAY",True,white)
-
+    
     while (running):
+        
         # player always move and shoot
         player.update()
-        bull = Bullet(player.rect.centerx, player.rect.centery)
-        all_group.add(bull)
-        bullet_group.add(bull)
-
-        for event in pygame.event.get():
-            if(event.type == pygame.QUIT):
-                running = False       
+        if playing:
+            bull = Bullet(player.rect.centerx, player.rect.centery)
+            all_group.add(bull)
+            bullet_group.add(bull)
+   
+        for event in pygame.event.get(pygame.QUIT):
+            pygame.quit()
 
         # frame rate
         clock.tick(6)
@@ -164,7 +191,9 @@ def main():
                 hit_ground += 1
             
         if (hit_ground >8):
-            text = font.render("GAME OVER",True,white)
+            text = font.render("GAME OVER, PRESS R TO REPLAY",True,white)
+            playing = False
+            player.set_playing(playing) 
             
         window.fill(black)
         all_group.draw(window)
