@@ -191,7 +191,7 @@ def main():
             for hit in hit_ground_list:
                 hit_ground += 1
             
-        if (hit_ground >8):
+        if (hit_ground >7):
             text = font.render("GAME OVER, PRESS R TO REPLAY",True,white)
             playing = False
             player.set_playing(playing) # make as least of bool, var, etc as possible
